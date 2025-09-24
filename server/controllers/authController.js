@@ -43,7 +43,9 @@ const register = async (req, res) => {
       handicap: handicap || 0
     });
 
+    console.log('Before saving user:', user);
     await user.save();
+    console.log('User saved successfully:', user._id);
 
     // Generate token
     const token = generateToken(user._id);
@@ -57,7 +59,7 @@ const register = async (req, res) => {
         name: user.name,
         email: user.email,
         handicap: user.handicap,
-        totalGames: user.totalGames,
+        totalRounds: user.totalRounds,
         bestScore: user.bestScore
       }
     });
@@ -116,7 +118,7 @@ const login = async (req, res) => {
         name: user.name,
         email: user.email,
         handicap: user.handicap,
-        totalGames: user.totalGames,
+        totalRounds: user.totalRounds,
         bestScore: user.bestScore
       }
     });
@@ -149,7 +151,7 @@ const getProfile = async (req, res) => {
         name: user.name,
         email: user.email,
         handicap: user.handicap,
-        totalGames: user.totalGames,
+        totalRounds: user.totalRounds,
         bestScore: user.bestScore,
         createdAt: user.createdAt
       }

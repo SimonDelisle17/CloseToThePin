@@ -1,10 +1,23 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:http/http.dart' as http;
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../models/user.dart';
 
 class AuthService {
-  static const String baseUrl = 'http://localhost:5000/api/auth';
+  // Dynamic base URL based on platform
+  static String get baseUrl {
+    if (Platform.isAndroid) {
+      // Use your actual PC IP address for Android (emulator or physical device)
+      return 'http://192.168.1.148:5000/api/auth';
+    } else if (Platform.isIOS) {
+      // For iOS simulator
+      return 'http://192.168.1.148:5000/api/auth';
+    } else {
+      // For other platforms (web, desktop)
+      return 'http://localhost:5000/api/auth';
+    }
+  }
   static const FlutterSecureStorage _storage = FlutterSecureStorage();
 
   Future<Map<String, dynamic>> register({
@@ -14,6 +27,7 @@ class AuthService {
     double handicap = 0,
   }) async {
     try {
+      print('AuthService: Attempting registration to $baseUrl/register');
       final response = await http.post(
         Uri.parse('$baseUrl/register'),
         headers: {'Content-Type': 'application/json'},
@@ -23,7 +37,10 @@ class AuthService {
           'password': password,
           'handicap': handicap,
         }),
-      );
+      ).timeout(const Duration(seconds: 30));
+
+      print('AuthService: Response status: ${response.statusCode}');
+      print('AuthService: Response body: ${response.body}');
 
       final data = json.decode(response.body);
 

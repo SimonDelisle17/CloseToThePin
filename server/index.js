@@ -30,10 +30,7 @@ app.use(express.json());
 app.use(morgan(logFormat));
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/closetothepin', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/closetothepin')
 .then(() => console.log('Connected to MongoDB'))
 .catch(err => console.error('MongoDB connection error:', err));
 
@@ -68,9 +65,11 @@ app.use((req, res) => {
 });
 
 // Start server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log('\n🏌️‍♂️ Close to the Pin API Server');
   console.log(`🚀 Server running on http://localhost:${PORT}`);
+  console.log(`🌐 Server accessible via http://0.0.0.0:${PORT} (all interfaces)`);
+  console.log(`📱 For Android emulator: http://10.0.2.2:${PORT}`);
   console.log(`📊 Environment: ${process.env.NODE_ENV || 'development'}`);
   console.log(`🗄️  Database: ${process.env.MONGODB_URI || 'mongodb://localhost:27017/closetothepin'}`);
   console.log('📋 Available endpoints:');
